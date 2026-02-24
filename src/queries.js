@@ -1,42 +1,46 @@
 import { db } from './db/db.js';
-import { users } from './db/schema.js';
+import { matches } from './db/schema.js';
 
-// Example: Insert a new user
-export async function createUser(name, email) {
+// Example: Insert a new match
+export async function createMatch(sport, homeTeam, awayTeam, status, startTime, endTime) {
   try {
-    const result = await db.insert(users).values({
-      name,
-      email,
+    const result = await db.insert(matches).values({
+      sport,
+      homeTeam,
+      awayTeam,
+      status,
+      startTime,
+      endTime
     }).returning();
     
-    console.log('User created:', result[0]);
+    console.log('Match created:', result[0]);
     return result[0];
   } catch (error) {
-    console.error('Error creating user:', error);
+    console.error('Error creating match:', error);
     throw error;
   }
 }
 
-// Example: Get all users
-export async function getAllUsers() {
+// Example: Get all matches
+export async function getAllMatches() {
   try {
-    const result = await db.select().from(users);
-    console.log('All users:', result);
+    const result = await db.select().from(matches);
+    console.log('All matches:', result);
     return result;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching matches:', error);
     throw error;
   }
 }
 
-// Example: Get user by ID
-export async function getUserById(id) {
+// Example: Get match by ID
+export async function getMatchById(id) {
   try {
-    const result = await db.select().from(users).where(users.id.eq(id));
-    console.log('User found:', result[0]);
+    const result = await db.select().from(matches).where(matches.id.eq(id));
+    console.log('Match found:', result[0]);
     return result[0];
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error('Error fetching match:', error);
     throw error;
   }
 }

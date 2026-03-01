@@ -3,7 +3,7 @@ import express from "express";
 // import { db } from "./db/db.js";
 import { createUser, getAllUsers } from "./queries.js";
 
-const PORT = 4000;
+const PORT = 4051;
 
 const app = express();
 

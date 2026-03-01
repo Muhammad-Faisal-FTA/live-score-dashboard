@@ -1,9 +1,10 @@
-import { neon } from 'neon';
+import 'dotenv/config';
+import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 
 // Get the database URL from environment variables
 const databaseUrl = process.env.NEON_DATABASE_URL;
-
+console.log(databaseUrl)
 if (!databaseUrl) {
   throw new Error('NEON_DATABASE_URL environment variable is required');
 }

@@ -1,35 +1,43 @@
-import http from "http";
+import express from "express";    
 import { db } from "./db/db.js";
-import { createUser, getAllUsers } from "./queries.js";
+import {matchRouter} from './routes/match.route.js';
 
-const PORT = 4000;
+const app = express();
+const PORT = 4051;
 
+// Middleware to parse JSON
+app.use(express.json());
 
-/* ---------------- HTTP Server ---------------- */
-
-const server = http.createServer(async (req, res) => {
+// Test database connection endpoint
+app.get('/', async (req, res) => {
   try {
-    // Test database connection
     const result = await db.execute('SELECT NOW()');
     console.log('Database connection successful:', result);
-
-    // Example: Create a test user
-    const testUser = await createUser('Test User', 'test@example.com');
-    console.log('Test user created:', testUser);
-
-    // Example: Get all users
-    const allUsers = await getAllUsers();
-    console.log('All users:', allUsers);
-
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("HTTP Server running on port 4000 with Drizzle + Neon connection. Test user created and retrieved.");
+    res.status(200).json({
+      message: `HTTP Server running on port ${PORT} with Drizzle + Neon connection. Test match created and retrieved.`,
+      status: 'success'
+    });
   } catch (error) {
     console.error('Database connection failed:', error);
-    res.writeHead(500, { "Content-Type": "text/plain" });
-    res.end("HTTP Server running on port 4000, but database connection failed");
+    res.status(500).json({
+      message: `HTTP Server running on port ${PORT}, but database connection failed`,
+      error: error.message,
+      status: 'error'
+    });
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+// matches api routes
+app.use('/api/matches', matchRouter);
+
+// 404 handler for unmatched routes
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Route not found',
+    path: req.originalUrl
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server listening on localhost:${PORT}`);
 });

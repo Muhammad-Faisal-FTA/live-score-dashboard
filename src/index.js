@@ -1,43 +1,23 @@
-import express from "express";    
-import { db } from "./db/db.js";
-import {matchRouter} from './routes/match.route.js';
+import http from "http";
+import express from "express";
+// import { db } from "./db/db.js";
+import { createUser, getAllUsers } from "./queries.js";
 
-const app = express();
 const PORT = 4051;
 
-// Middleware to parse JSON
+const app = express();
+
 app.use(express.json());
+/* ---------------- HTTP Server ---------------- */
 
-// Test database connection endpoint
-app.get('/', async (req, res) => {
-  try {
-    const result = await db.execute('SELECT NOW()');
-    console.log('Database connection successful:', result);
-    res.status(200).json({
-      message: `HTTP Server running on port ${PORT} with Drizzle + Neon connection. Test match created and retrieved.`,
-      status: 'success'
-    });
-  } catch (error) {
-    console.error('Database connection failed:', error);
-    res.status(500).json({
-      message: `HTTP Server running on port ${PORT}, but database connection failed`,
-      error: error.message,
-      status: 'error'
-    });
-  }
-});
+const server = http.createServer(app)
+app.get("/users",getAllUsers);
+app.post("/users",createUser);
+ 
+const { broadCastStarted }  = attachWebSocketServer(server);
 
-// matches api routes
-app.use('/api/matches', matchRouter);
 
-// 404 handler for unmatched routes
-app.use((req, res) => {
-  res.status(404).json({
-    error: 'Route not found',
-    path: req.originalUrl
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server listening on localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Websocket is runing on: ${PORT}/ws`)
+  console.log(`Server listening on port ${PORT}`);
 });

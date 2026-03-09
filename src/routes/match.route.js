@@ -2,6 +2,9 @@ import{Router} from 'express';
 import { createMatchSchema } from '../validation/matches.js';
 import {matches} from "../db/schema.js" 
 import {db} from "../db/db.js"
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 export const matchRouter = Router();
 

@@ -2,6 +2,7 @@ import http from "http";
 import express from "express";
 // import { db } from "./db/db.js";
 import { createUser, getAllUsers } from "./queries.js";
+import { attachWebSocketServer } from "./ws/server.js";
 
 const PORT = 4051;
 

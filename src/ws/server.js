@@ -1,4 +1,4 @@
-import WebSocket from 'ws'; 
+import { WebSocketServer } from 'ws';
 function sendJson(websocket, data){
     if(websocket.readyState != websocket.OPEN){
         console.log("WebSocket is not open");
@@ -17,7 +17,7 @@ function broadCast(wss, data){
 }}
 
 export function attachWebSocketServer(server){
-    const wss = new WebSocket.Server({ 
+    const wss = new WebSocketServer({ 
         server,
         path: '/ws',
         maxPayload: 1024 * 1024, // 1MB 
@@ -33,10 +33,10 @@ export function attachWebSocketServer(server){
     })
 
     function broadCastStarted(match){
-    broadCast(wss, { event: 'matchStarted', match });
+        broadCast(wss, { event: 'matchStarted', match });
     }
 
-    return { broadCastStarted: broadCastStarted };
+    return { broadCastStarted };
 
 
 }
